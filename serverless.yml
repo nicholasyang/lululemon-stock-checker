@@ -1,0 +1,24 @@
+service: lululemon-stock-checker
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.8
+
+  iam:
+    role:
+      statements:
+        - Effect: 'Allow'
+          Action:
+            - 'sns:Publish'
+          Resource: arn:aws:sns:us-east-1:259356154792:lululemon-in-stock-notification
+
+functions:
+  cronHandler:
+    handler: handler.run
+    events:
+      - schedule: cron(0,10,20,30,40,50 * ? * * *)
+
+plugins:
+  - serverless-python-requirements

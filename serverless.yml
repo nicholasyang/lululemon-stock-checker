@@ -13,6 +13,10 @@ provider:
           Action:
             - 'sns:Publish'
           Resource: arn:aws:sns:us-east-1:259356154792:lululemon-in-stock-notification
+        - Effect: 'Allow'
+          Action:
+            - 'dynamodb:Scan'
+          Resource: arn:aws:dynamodb:us-east-1:259356154792:table/lulu_items
 
 functions:
   cronHandler:

@@ -12,17 +12,40 @@ provider:
         - Effect: 'Allow'
           Action:
             - 'sns:Publish'
-          Resource: arn:aws:sns:us-east-1:259356154792:lululemon-in-stock-notification
+          Resource: arn:aws:sns:us-east-1:259356154792:lululemon-stock-checker-notification
         - Effect: 'Allow'
           Action:
             - 'dynamodb:Scan'
-          Resource: arn:aws:dynamodb:us-east-1:259356154792:table/lulu_items
+          Resource: arn:aws:dynamodb:us-east-1:259356154792:table/lululemon-stock-checker-items
 
 functions:
   cronHandler:
     handler: handler.run
     events:
       - schedule: cron(0,10,20,30,40,50 * ? * * *)
+
+resources:
+  Resources:
+    ItemTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: lululemon-stock-checker-items
+        AttributeDefinitions:
+          - AttributeName: name
+            AttributeType: S
+        KeySchema:
+          - AttributeName: name
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+    SNSTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: lululemon-stock-checker-notification
+        Subscription:
+          - Protocol: email
+            Endpoint: nicholasjyang@pm.me
 
 plugins:
   - serverless-python-requirements

@@ -12,17 +12,17 @@ provider:
         - Effect: 'Allow'
           Action:
             - 'sns:Publish'
-          Resource: arn:aws:sns:us-east-1:259356154792:lululemon-stock-checker-notification
+          Resource: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:lululemon-stock-checker-notification
         - Effect: 'Allow'
           Action:
             - 'dynamodb:Scan'
-          Resource: arn:aws:dynamodb:us-east-1:259356154792:table/lululemon-stock-checker-items
+          Resource: !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/lululemon-stock-checker-items
 
 functions:
-  cronHandler:
+  checkItems:
     handler: handler.run
     events:
-      - schedule: cron(0,10,20,30,40,50 * ? * * *)
+      - schedule: cron(0,15,30,45 * ? * * *)
 
 resources:
   Resources:
